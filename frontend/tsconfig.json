@@ -18,7 +18,7 @@
     "baseUrl": ".",  // 👈 important
     "paths": {
       "@/*": ["./src/*"],
-      "@/components/*": ["./components/*"] // 👈 for shadcn
+      "@/components/*": ["./src/components/*"] // 👈 for shadcn
     }
   },
   "include": ["src", "components"]
