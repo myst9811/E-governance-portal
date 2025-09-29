@@ -1,5 +1,4 @@
 import animate from "tailwindcss-animate";
-import twAnimate from "tw-animate-css";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,5 +9,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [animate, twAnimate],
+  plugins: [animate],
 };

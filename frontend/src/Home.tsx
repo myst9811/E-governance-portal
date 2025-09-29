@@ -23,10 +23,11 @@ const Home: React.FC = () => {
             <a href="#" className="hover:underline">Home</a>
             <br />
             <a href="#" className="hover:underline">Services</a>
-            <br />
+           <br />
             <a href="#" className="hover:underline">Contact</a>
             <br />
             <a href="#" className="hover:underline">Voting</a>
+            <br />
           </nav>
         </div>
       </header>
