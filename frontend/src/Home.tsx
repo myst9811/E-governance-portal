@@ -1,23 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { User, FileText, ClipboardList, Shield, Vote, Bell, Wallet, Search, ChevronRight } from "lucide-react";
+import { User, FileText, ClipboardList, Shield, Vote, Bell, Wallet, Search, ChevronRight, Loader2 } from "lucide-react";
+import { useWeb3 } from "./Web3Context";
+import { useContracts } from "./useContracts";
 
 const Home = () => {
-  const [connectedWallet, setConnectedWallet] = useState<string | null> (null);
+  const { account, connectWallet, disconnectWallet, isConnecting, error: web3Error } = useWeb3();
+  const contracts = useContracts();
+  
   const [notifications, setNotifications] = useState(3);
   const [searchQuery, setSearchQuery] = useState("");
+  const [stats, setStats] = useState({
+    totalUsers: "50,000+",
+    activeVotes: "12",
+    certificatesIssued: "125,000+",
+    smartContracts: "45"
+  });
 
-  const handleWalletConnect = () => {
-    // Simulate wallet connection
-    setConnectedWallet("0x1234...5678");
-    alert("Wallet connected successfully!");
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  const handleSearch = () => {
-    
+  const handleWalletAction = async () => {
+    if (account) {
+      disconnectWallet();
+    } else {
+      await connectWallet();
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
     if (searchQuery.trim()) {
       alert(`Searching for: ${searchQuery}`);
+      // TODO: Implement actual search functionality
     }
   };
 
@@ -66,11 +83,11 @@ const Home = () => {
     { title: "Service request approved", time: "3 days ago", type: "service" }
   ];
 
-  const stats = [
-    { label: "Total Users", value: "50,000+", icon: <User className="w-6 h-6" /> },
-    { label: "Active Votes", value: "12", icon: <Vote className="w-6 h-6" /> },
-    { label: "Certificates Issued", value: "125,000+", icon: <FileText className="w-6 h-6" /> },
-    { label: "Smart Contracts", value: "45", icon: <Shield className="w-6 h-6" /> }
+  const statsData = [
+    { label: "Total Users", value: stats.totalUsers, icon: <User className="w-6 h-6" /> },
+    { label: "Active Votes", value: stats.activeVotes, icon: <Vote className="w-6 h-6" /> },
+    { label: "Certificates Issued", value: stats.certificatesIssued, icon: <FileText className="w-6 h-6" /> },
+    { label: "Smart Contracts", value: stats.smartContracts, icon: <Shield className="w-6 h-6" /> }
   ];
 
   return (
@@ -98,22 +115,36 @@ const Home = () => {
                 )}
               </button>
               
-              {connectedWallet ? (
-                <div className="flex items-center gap-2 bg-blue-700 px-4 py-2 rounded-lg">
-                  <Wallet className="w-4 h-4" />
-                  <span className="text-sm">{connectedWallet}</span>
-                </div>
-              ) : (
-                <Button 
-                  onClick={handleWalletConnect}
-                  className="bg-white text-blue-600 hover:bg-gray-100"
-                >
-                  <Wallet className="w-4 h-4 mr-2" />
-                  Connect Wallet
-                </Button>
-              )}
+              <Button 
+                onClick={handleWalletAction}
+                disabled={isConnecting}
+                className="bg-white text-blue-600 hover:bg-gray-100"
+              >
+                {isConnecting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Connecting...
+                  </>
+                ) : account ? (
+                  <>
+                    <Wallet className="w-4 h-4 mr-2" />
+                    {formatAddress(account)}
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="w-4 h-4 mr-2" />
+                    Connect Wallet
+                  </>
+                )}
+              </Button>
             </div>
           </div>
+          
+          {web3Error && (
+            <div className="mt-2 text-sm text-red-200 bg-red-900 bg-opacity-50 p-2 rounded">
+              {web3Error}
+            </div>
+          )}
         </div>
       </header>
 
@@ -131,6 +162,15 @@ const Home = () => {
               <span className="font-semibold text-blue-600">accountability</span>, and{" "}
               <span className="font-semibold text-blue-600">accessibility</span> for all citizens.
             </p>
+
+            {/* Connection Status Alert */}
+            {!account && (
+              <div className="max-w-2xl mx-auto mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <span className="font-semibold">Connect your wallet</span> to access all features and services.
+                </p>
+              </div>
+            )}
 
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-8">
@@ -153,7 +193,7 @@ const Home = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              {stats.map((stat, idx) => (
+              {statsData.map((stat, idx) => (
                 <Card key={idx} className="border-none shadow-md">
                   <CardContent className="p-6 text-center">
                     <div className="flex justify-center mb-2 text-blue-600">
@@ -183,6 +223,14 @@ const Home = () => {
                 <Card 
                   key={idx}
                   className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-blue-500"
+                  onClick={() => {
+                    if (!account) {
+                      alert('Please connect your wallet to access this service');
+                    } else {
+                      // Navigate to service page
+                      alert(`Navigating to ${service.title}`);
+                    }
+                  }}
                 >
                   <CardContent className="p-6">
                     <div className="mb-4">{service.icon}</div>
@@ -234,28 +282,48 @@ const Home = () => {
                   Quick Actions
                 </h3>
                 <div className="space-y-3">
-                  <Button className="w-full justify-start text-left h-auto py-4" variant="outline">
+                  <Button 
+                    className="w-full justify-start text-left h-auto py-4" 
+                    variant="outline"
+                    disabled={!account}
+                    onClick={() => alert('Navigate to voting page')}
+                  >
                     <Vote className="w-5 h-5 mr-3" />
                     <div>
                       <div className="font-semibold">Cast Your Vote</div>
                       <div className="text-xs text-gray-500">Active elections available</div>
                     </div>
                   </Button>
-                  <Button className="w-full justify-start text-left h-auto py-4" variant="outline">
+                  <Button 
+                    className="w-full justify-start text-left h-auto py-4" 
+                    variant="outline"
+                    disabled={!account}
+                    onClick={() => alert('Navigate to certificates page')}
+                  >
                     <FileText className="w-5 h-5 mr-3" />
                     <div>
                       <div className="font-semibold">Request Certificate</div>
                       <div className="text-xs text-gray-500">Get verified documents</div>
                     </div>
                   </Button>
-                  <Button className="w-full justify-start text-left h-auto py-4" variant="outline">
+                  <Button 
+                    className="w-full justify-start text-left h-auto py-4" 
+                    variant="outline"
+                    disabled={!account}
+                    onClick={() => alert('Navigate to service requests page')}
+                  >
                     <ClipboardList className="w-5 h-5 mr-3" />
                     <div>
                       <div className="font-semibold">Submit Service Request</div>
                       <div className="text-xs text-gray-500">Track your requests</div>
                     </div>
                   </Button>
-                  <Button className="w-full justify-start text-left h-auto py-4" variant="outline">
+                  <Button 
+                    className="w-full justify-start text-left h-auto py-4" 
+                    variant="outline"
+                    disabled={!account}
+                    onClick={() => alert('Navigate to document verification page')}
+                  >
                     <Shield className="w-5 h-5 mr-3" />
                     <div>
                       <div className="font-semibold">Verify Document</div>
