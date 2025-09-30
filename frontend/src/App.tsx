@@ -3,7 +3,7 @@ import Home from './Home'; // adjust the path if Home.tsx is in another folder
 
 const App: React.FC = () => {
   return (
-    <div>
+    <div className='w-full'>
       <Home />
     </div>
   );
