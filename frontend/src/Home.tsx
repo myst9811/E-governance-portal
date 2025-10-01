@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import * as React from 'react';
+import { useState, useEffect } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { User, FileText, ClipboardList, Shield, Vote, Bell, Wallet, Search, ChevronRight, Loader2 } from "lucide-react";
 import { useWeb3 } from "./Web3Context";
 import { useContracts } from "./useContracts";
+
 
 const Home = () => {
   const { account, connectWallet, disconnectWallet, isConnecting, error: web3Error } = useWeb3();

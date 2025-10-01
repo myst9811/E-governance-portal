@@ -1,12 +1,18 @@
-import React from 'react';
-import Home from './Home'; // adjust the path if Home.tsx is in another folder
 
-const App: React.FC = () => {
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Web3Provider } from './Web3Context';
+import Home from './Home';
+
+function App() {
   return (
-    <div className='w-full'>
-      <Home />
-    </div>
+    <Web3Provider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Router>
+    </Web3Provider>
   );
-};
+}
 
 export default App;
