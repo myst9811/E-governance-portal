@@ -1,12 +1,12 @@
 // Contract addresses - Update these after deploying your contracts
-export const CONTRACT_ADDRESSES = {
-  IDENTITY: process.env.REACT_APP_IDENTITY_CONTRACT || '',
-  CERTIFICATES: process.env.REACT_APP_CERTIFICATES_CONTRACT || '',
-  VOTING: process.env.REACT_APP_VOTING_CONTRACT || '',
-  SERVICE_REQUESTS: process.env.REACT_APP_SERVICE_REQUESTS_CONTRACT || '',
+
+const CONTRACT_ADDRESSES = {
+  IDENTITY: import.meta.env.VITE_IDENTITY_CONTRACT || "",
+  CERTIFICATES: import.meta.env.VITE_CERTIFICATES_CONTRACT || "",
+  VOTING: import.meta.env.VITE_VOTING_CONTRACT || "",
+  SERVICE_REQUESTS: import.meta.env.VITE_SERVICE_REQUESTS_CONTRACT || "",
   // Add more contract addresses as needed
 };
-
 // Contract ABIs - Import from your compiled contracts
 // You'll need to copy these from blockchain/artifacts/contracts/
 export const CONTRACT_ABIS = {
