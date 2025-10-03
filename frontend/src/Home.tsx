@@ -10,11 +10,12 @@ import { useContracts } from "./useContracts";
 const Home = () => {
   const { account, connectWallet, disconnectWallet, isConnecting, error: web3Error } = useWeb3();
   const contracts = useContracts();
+
   
   const [notifications, setNotifications] = useState(3);
   const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({
-    totalUsers: "50,000+",
+    totalUsers: "50+",
     activeVotes: "12",
     certificatesIssued: "125,000+",
     smartContracts: "45"
