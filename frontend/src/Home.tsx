@@ -17,7 +17,7 @@ const Home = () => {
   const [stats, setStats] = useState({
     totalUsers: "50+",
     activeVotes: "12",
-    certificatesIssued: "125,000+",
+    certificatesIssued: "125+",
     smartContracts: "45"
   });
 

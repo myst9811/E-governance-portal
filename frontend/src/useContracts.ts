@@ -20,7 +20,7 @@ export const useContracts = () => {
     return new ethers.Contract(address, abi, signer);
   };
 
-  // Identity Contract Methods
+  
   const registerIdentity = async (name: string, documentHash: string) => {
     try {
       const contract = getContract('IDENTITY');
@@ -59,7 +59,7 @@ export const useContracts = () => {
     }
   };
 
-  // Certificate Contract Methods
+
   const issueCertificate = async (
     recipient: string,
     certificateType: string,
@@ -73,7 +73,7 @@ export const useContracts = () => {
       const tx = await contract.issueCertificate(recipient, certificateType, documentHash);
       const receipt = await tx.wait();
       
-      // Extract certificate ID from event
+      
       const event = receipt.logs.find((log: any) => 
         log.topics[0] === contract.interface.getEvent('CertificateIssued')
       );
