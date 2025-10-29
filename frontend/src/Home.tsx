@@ -1,20 +1,18 @@
 import * as React from 'react';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { User, FileText, ClipboardList, Shield, Vote, Bell, Wallet, Search, ChevronRight, Loader2 } from "lucide-react";
 import { useWeb3 } from "./Web3Context";
-import { useContracts } from "./useContracts";
 
 
 const Home = () => {
   const { account, connectWallet, disconnectWallet, isConnecting, error: web3Error } = useWeb3();
-  const contracts = useContracts();
 
-  
-  const [notifications, setNotifications] = useState(3);
+
+  const [notifications] = useState(3);
   const [searchQuery, setSearchQuery] = useState("");
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     totalUsers: "50+",
     activeVotes: "12",
     certificatesIssued: "125+",

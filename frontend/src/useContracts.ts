@@ -20,11 +20,11 @@ export const useContracts = () => {
     return new ethers.Contract(address, abi, signer);
   };
 
-  
-  const registerIdentity = async (name: string, documentHash: string) => {
+  // Identity Contract Methods
+  const registerCitizen = async (name: string, dob: string, nationalId: string) => {
     try {
       const contract = getContract('IDENTITY');
-      const tx = await contract.registerIdentity(name, documentHash);
+      const tx = await contract.registerCitizen(name, dob, nationalId);
       await tx.wait();
       return { success: true, txHash: tx.hash };
     } catch (error: any) {
@@ -32,28 +32,40 @@ export const useContracts = () => {
     }
   };
 
-  const verifyIdentity = async (address: string) => {
+  const verifyCitizen = async (address: string) => {
     try {
       const contract = getContract('IDENTITY');
-      const isVerified = await contract.verifyIdentity(address);
-      return { success: true, isVerified };
+      const tx = await contract.verifyCitizen(address);
+      await tx.wait();
+      return { success: true, txHash: tx.hash };
     } catch (error: any) {
       return { success: false, error: error.message };
     }
   };
 
-  const getIdentity = async (address: string) => {
+  const getCitizen = async (address: string) => {
     try {
       const contract = getContract('IDENTITY');
-      const identity = await contract.getIdentity(address);
-      return { 
-        success: true, 
-        identity: {
-          name: identity[0],
-          documentHash: identity[1],
-          isVerified: identity[2]
+      const citizen = await contract.getCitizen(address);
+      return {
+        success: true,
+        citizen: {
+          name: citizen[0],
+          dob: citizen[1],
+          nationalId: citizen[2],
+          verified: citizen[3]
         }
       };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const isRegistered = async (address: string) => {
+    try {
+      const contract = getContract('IDENTITY');
+      const registered = await contract.registered(address);
+      return { success: true, registered };
     } catch (error: any) {
       return { success: false, error: error.message };
     }
@@ -72,12 +84,7 @@ export const useContracts = () => {
     }
       const tx = await contract.issueCertificate(recipient, certificateType, documentHash);
       const receipt = await tx.wait();
-      
-      
-      const event = receipt.logs.find((log: any) => 
-        log.topics[0] === contract.interface.getEvent('CertificateIssued')
-      );
-      
+
       return { success: true, txHash: tx.hash, receipt };
     } catch (error: any) {
       return { success: false, error: error.message };
@@ -122,8 +129,7 @@ export const useContracts = () => {
   ) => {
     try {
       const contract = getContract('VOTING');
-      const duration = durationInDays * 24 * 60 * 60; // Convert to seconds
-      const tx = await contract.createVote(title, description, options, duration);
+      const tx = await contract.createVote(title, description, options, durationInDays);
       await tx.wait();
       return { success: true, txHash: tx.hash };
     } catch (error: any) {
@@ -152,11 +158,40 @@ export const useContracts = () => {
     }
   };
 
-  const hasVoted = async (voteId: number, voterAddress: string) => {
+  const hasUserVoted = async (voteId: number, voterAddress: string) => {
     try {
       const contract = getContract('VOTING');
-      const voted = await contract.hasVoted(voteId, voterAddress);
+      const voted = await contract.hasUserVoted(voteId, voterAddress);
       return { success: true, hasVoted: voted };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const getVote = async (voteId: number) => {
+    try {
+      const contract = getContract('VOTING');
+      const vote = await contract.getVote(voteId);
+      return {
+        success: true,
+        vote: {
+          title: vote[0],
+          description: vote[1],
+          options: vote[2],
+          endTime: Number(vote[3]),
+          closed: vote[4]
+        }
+      };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const isVoteActive = async (voteId: number) => {
+    try {
+      const contract = getContract('VOTING');
+      const isActive = await contract.isVoteActive(voteId);
+      return { success: true, isActive };
     } catch (error: any) {
       return { success: false, error: error.message };
     }
@@ -174,10 +209,21 @@ export const useContracts = () => {
     }
   };
 
-  const approveServiceRequest = async (requestId: number) => {
+  const approveServiceRequest = async (requestId: number, message: string) => {
     try {
       const contract = getContract('SERVICE_REQUESTS');
-      const tx = await contract.approveRequest(requestId);
+      const tx = await contract.approveRequest(requestId, message);
+      await tx.wait();
+      return { success: true, txHash: tx.hash };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const rejectServiceRequest = async (requestId: number, message: string) => {
+    try {
+      const contract = getContract('SERVICE_REQUESTS');
+      const tx = await contract.rejectRequest(requestId, message);
       await tx.wait();
       return { success: true, txHash: tx.hash };
     } catch (error: any) {
@@ -196,7 +242,8 @@ export const useContracts = () => {
           requestType: request[1],
           description: request[2],
           status: request[3],
-          timestamp: Number(request[4])
+          timestamp: Number(request[4]),
+          responseMessage: request[5]
         }
       };
     } catch (error: any) {
@@ -204,26 +251,41 @@ export const useContracts = () => {
     }
   };
 
+  const getUserRequests = async (userAddress: string) => {
+    try {
+      const contract = getContract('SERVICE_REQUESTS');
+      const requestIds = await contract.getUserRequests(userAddress);
+      return { success: true, requestIds: requestIds.map(Number) };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
   return {
     // Identity methods
-    registerIdentity,
-    verifyIdentity,
-    getIdentity,
-    
+    registerCitizen,
+    verifyCitizen,
+    getCitizen,
+    isRegistered,
+
     // Certificate methods
     issueCertificate,
     verifyCertificate,
     getCertificate,
-    
+
     // Voting methods
     createVote,
     castVote,
     getVoteResults,
-    hasVoted,
-    
+    hasUserVoted,
+    getVote,
+    isVoteActive,
+
     // Service request methods
     submitServiceRequest,
     approveServiceRequest,
-    getServiceRequest
+    rejectServiceRequest,
+    getServiceRequest,
+    getUserRequests
   };
 };
