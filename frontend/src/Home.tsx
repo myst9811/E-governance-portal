@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { User, FileText, ClipboardList, Shield, Vote, Bell, Wallet, Search, ChevronRight, Loader2 } from "lucide-react";
@@ -7,6 +8,7 @@ import { useWeb3 } from "./Web3Context";
 
 
 const Home = () => {
+  const navigate = useNavigate();
   const { account, connectWallet, disconnectWallet, isConnecting, error: web3Error } = useWeb3();
 
 
@@ -66,15 +68,15 @@ const Home = () => {
     },
     {
       icon: <Shield className="w-8 h-8 text-blue-600" />,
-      title: "Smart Contracts",
-      desc: "View and interact with government smart contracts.",
-      link: "/contracts"
+      title: "Admin Dashboard",
+      desc: "Manage identities, certificates, and service requests.",
+      link: "/admin"
     },
     {
       icon: <Wallet className="w-8 h-8 text-blue-600" />,
-      title: "Transactions",
-      desc: "Track all your blockchain transactions and history.",
-      link: "/transactions"
+      title: "My Account",
+      desc: "View your registrations, certificates, and activity.",
+      link: "/identity"
     }
   ];
 
@@ -100,10 +102,10 @@ const Home = () => {
             <h1 className="text-2xl font-bold">eGov Portal</h1>
             
             <nav className="hidden md:flex space-x-6 font-medium">
-              <a href="#" className="hover:text-blue-200 transition">Home</a>
+              <button onClick={() => navigate('/')} className="hover:text-blue-200 transition">Home</button>
               <a href="#services" className="hover:text-blue-200 transition">Services</a>
-              <a href="#" className="hover:text-blue-200 transition">Contact</a>
-              <a href="#" className="hover:text-blue-200 transition">Voting</a>
+              <button onClick={() => navigate('/voting')} className="hover:text-blue-200 transition">Voting</button>
+              <button onClick={() => navigate('/admin')} className="hover:text-blue-200 transition">Admin</button>
             </nav>
 
             <div className="flex items-center gap-4">
@@ -221,15 +223,14 @@ const Home = () => {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service, idx) => (
-                <Card 
+                <Card
                   key={idx}
                   className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-blue-500"
                   onClick={() => {
                     if (!account) {
                       alert('Please connect your wallet to access this service');
                     } else {
-                      // Navigate to service page
-                      alert(`Navigating to ${service.title}`);
+                      navigate(service.link);
                     }
                   }}
                 >
@@ -283,11 +284,11 @@ const Home = () => {
                   Quick Actions
                 </h3>
                 <div className="space-y-3">
-                  <Button 
-                    className="w-full justify-start text-left h-auto py-4" 
+                  <Button
+                    className="w-full justify-start text-left h-auto py-4"
                     variant="outline"
                     disabled={!account}
-                    onClick={() => alert('Navigate to voting page')}
+                    onClick={() => navigate('/voting')}
                   >
                     <Vote className="w-5 h-5 mr-3" />
                     <div>
@@ -295,11 +296,11 @@ const Home = () => {
                       <div className="text-xs text-gray-500">Active elections available</div>
                     </div>
                   </Button>
-                  <Button 
-                    className="w-full justify-start text-left h-auto py-4" 
+                  <Button
+                    className="w-full justify-start text-left h-auto py-4"
                     variant="outline"
                     disabled={!account}
-                    onClick={() => alert('Navigate to certificates page')}
+                    onClick={() => navigate('/certificates')}
                   >
                     <FileText className="w-5 h-5 mr-3" />
                     <div>
@@ -307,11 +308,11 @@ const Home = () => {
                       <div className="text-xs text-gray-500">Get verified documents</div>
                     </div>
                   </Button>
-                  <Button 
-                    className="w-full justify-start text-left h-auto py-4" 
+                  <Button
+                    className="w-full justify-start text-left h-auto py-4"
                     variant="outline"
                     disabled={!account}
-                    onClick={() => alert('Navigate to service requests page')}
+                    onClick={() => navigate('/services')}
                   >
                     <ClipboardList className="w-5 h-5 mr-3" />
                     <div>
@@ -319,11 +320,11 @@ const Home = () => {
                       <div className="text-xs text-gray-500">Track your requests</div>
                     </div>
                   </Button>
-                  <Button 
-                    className="w-full justify-start text-left h-auto py-4" 
+                  <Button
+                    className="w-full justify-start text-left h-auto py-4"
                     variant="outline"
                     disabled={!account}
-                    onClick={() => alert('Navigate to document verification page')}
+                    onClick={() => navigate('/certificates')}
                   >
                     <Shield className="w-5 h-5 mr-3" />
                     <div>
