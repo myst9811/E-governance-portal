@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/home.tsx","./src/web3context.tsx","./src/contractconfig.ts","./src/main.tsx","./src/usecontracts.ts","./src/vite-env.d.ts","./src/lib/utils.ts"],"errors":true,"version":"5.8.3"}
+{"root":["./src/app.tsx","./src/home.tsx","./src/web3context.tsx","./src/contractconfig.ts","./src/main.tsx","./src/usecontracts.ts","./src/vite-env.d.ts","./src/lib/utils.ts","./components/ui/button.tsx","./components/ui/card.tsx"],"errors":true,"version":"5.8.3"}
