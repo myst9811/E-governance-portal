@@ -3,7 +3,7 @@ import { useWeb3 } from './Web3Context';
 import { CONTRACT_ADDRESSES, CONTRACT_ABIS } from './contractConfig';
 
 export const useContracts = () => {
-  const { signer, provider } = useWeb3();
+  const { signer } = useWeb3();
 
   const getContract = (contractName: keyof typeof CONTRACT_ADDRESSES) => {
     if (!signer) {
