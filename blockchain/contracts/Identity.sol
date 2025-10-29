@@ -56,4 +56,5 @@ contract Identity {
         Citizen memory c = citizens[_citizen];
         return (c.name, c.dob, c.nationalId, c.verified);
     }
+
 }
