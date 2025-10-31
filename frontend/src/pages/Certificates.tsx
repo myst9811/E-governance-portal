@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
-import { FileText, CheckCircle, AlertCircle, Loader2, ArrowLeft, Shield } from 'lucide-react';
+import { FileText, CheckCircle, AlertCircle, Loader2, Shield } from 'lucide-react';
 import { useWeb3 } from '../Web3Context';
 import { useContracts } from '../useContracts';
+import Header from '../../components/Header';
 
 const Certificates = () => {
   const navigate = useNavigate();
@@ -121,21 +122,7 @@ const Certificates = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/')}
-              className="text-white hover:bg-blue-700"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Home
-            </Button>
-            <h1 className="text-2xl font-bold">Certificate Management</h1>
-          </div>
-        </div>
-      </header>
+      <Header currentPage="certificates" />
 
       <main className="container mx-auto px-6 py-8 max-w-6xl">
         {/* Message Display */}

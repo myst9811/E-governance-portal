@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
-import { Shield, CheckCircle, AlertCircle, Loader2, ArrowLeft, User, FileText, XCircle } from 'lucide-react';
+import { Shield, CheckCircle, AlertCircle, Loader2, User, FileText, XCircle } from 'lucide-react';
 import { useWeb3 } from '../Web3Context';
 import { useContracts } from '../useContracts';
+import Header from '../../components/Header';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -163,22 +164,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-purple-800 to-purple-600 text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/')}
-              className="text-white hover:bg-purple-700"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Home
-            </Button>
-            <Shield className="w-6 h-6" />
-            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          </div>
-        </div>
-      </header>
+      <Header currentPage="admin" />
 
       <main className="container mx-auto px-6 py-8 max-w-6xl">
         {/* Warning Banner */}
@@ -214,7 +200,7 @@ const Admin = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="w-6 h-6 text-purple-600" />
+                <User className="w-6 h-6 text-blue-600" />
                 Verify Citizen Identity
               </CardTitle>
               <CardDescription>
@@ -231,7 +217,7 @@ const Admin = () => {
                     type="text"
                     value={verifyCitizenAddress}
                     onChange={(e) => setVerifyCitizenAddress(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="0x..."
                     required
                   />
@@ -242,7 +228,7 @@ const Admin = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className="w-full"
                   disabled={!account || isLoading}
                 >
                   {isLoading ? (
@@ -265,7 +251,7 @@ const Admin = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="w-6 h-6 text-purple-600" />
+                <FileText className="w-6 h-6 text-blue-600" />
                 Manage Service Requests
               </CardTitle>
               <CardDescription>
@@ -278,13 +264,12 @@ const Admin = () => {
                   type="number"
                   value={requestId}
                   onChange={(e) => setRequestId(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter Request ID"
                   min="1"
                 />
                 <Button
                   onClick={loadRequestDetails}
-                  className="bg-purple-600 hover:bg-purple-700"
                   disabled={!account || isLoading}
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Load'}
@@ -408,7 +393,7 @@ const Admin = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <User className="w-5 h-5 text-purple-600" />
+                  <User className="w-5 h-5 text-blue-600" />
                   Identity Verification
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -417,7 +402,7 @@ const Admin = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-purple-600" />
+                  <FileText className="w-5 h-5 text-blue-600" />
                   Request Management
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -426,7 +411,7 @@ const Admin = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-purple-600" />
+                  <Shield className="w-5 h-5 text-blue-600" />
                   Accountability
                 </h3>
                 <p className="text-sm text-gray-600">
