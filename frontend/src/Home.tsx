@@ -13,9 +13,9 @@ const Home = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [stats] = useState({
-    totalUsers: "2,500+",
-    activeVotes: "12",
-    certificatesIssued: "8,450",
+    totalUsers: "0+",
+    activeVotes: "2",
+    certificatesIssued: "10+",
     smartContracts: "4"
   });
 

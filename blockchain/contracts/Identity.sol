@@ -18,7 +18,7 @@ contract Identity {
     event CitizenRegistered(address indexed user, string name);
     event CitizenVerified(address indexed user, bool status);
     
-
+    
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only admin can perform this action");
         _;

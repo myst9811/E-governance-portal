@@ -74,7 +74,7 @@ async function main() {
   console.log("=".repeat(70));
 
   console.log("\n✓ All contracts deployed to Sepolia testnet!");
-
+  
   console.log("\nVerify contracts on Etherscan:");
   console.log("npx hardhat verify --network sepolia " + identityAddress);
   console.log("npx hardhat verify --network sepolia " + certificatesAddress);
